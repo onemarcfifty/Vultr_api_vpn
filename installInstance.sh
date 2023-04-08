@@ -25,12 +25,12 @@ fi
 # The Wireguard tools need to be present for this
 # If we are on an OpenWrt Router, then we will derive it from the 
 # interface settings from UCI
-if [ -z "$2" ] ; then
+if [ ! -z "$2" ] ; then
   LOCAL_PUBLIC_KEY=$2
   LOCAL_PRIVATE_KEY=
 else
   if [ "$OPENWRT" = "TRUE" ] ; then
-    LOCAL_PRIVATE_KEY=$(uci show network.${LOCAL_WG_INTERFACE}.private_key | cut -d '=' -f 2)
+    LOCAL_PRIVATE_KEY=$(uci show network.${LOCAL_WG_INTERFACE}.private_key | cut -d \' -f 2)
   else
     LOCAL_PRIVATE_KEY=`wg genkey`
   fi
@@ -58,7 +58,7 @@ sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no root@${INSTANCE_IP} "ba
 
 # the script has set the (remote) Environment variable SERVER_PUBLIC_KEY
 # which contains the Wireguard public key of the remote instance
-SERVER_PUB_KEY=$(sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no root@${INSTANCE_IP} "echo $SERVER_PUBLIC_KEY")
+SERVER_PUB_KEY=$(sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no root@${INSTANCE_IP} "cat .serverkey")
 echo "The Server has the public key $SERVER_PUB_KEY"
 echo "SERVERKEY=$SERVER_PUB_KEY" >>.instance
 
