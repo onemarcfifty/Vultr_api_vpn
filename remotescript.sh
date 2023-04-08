@@ -32,8 +32,9 @@ ufw allow 51820/udp
 #ufw route allow in on wg0 out on enp1s0 
 
 # read out this server's pubkey
-readarray -d : -t templine <<< $(wg | grep "public key")
-export SERVER_PUBLIC_KEY=${templine[1]};
+#readarray -d : -t templine <<< $(wg | grep "public key")
+#export SERVER_PUBLIC_KEY=${templine[1]};
+export SERVER_PUBLIC_KEY=$(wg | grep "public key" | cut -d " " -f 5)
 
 # add the new peer to the wg0 config file
 wg set wg0 peer $REMOTE_PUBLIC_KEY allowed-ips $WGCLIENTADDRESS
