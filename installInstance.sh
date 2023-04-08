@@ -95,14 +95,24 @@ if [ "$OPENWRT" = "TRUE" ] ; then
   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].description="REMOTE"
   uci add_list network.@wireguard_${LOCAL_WG_INTERFACE}[-1].allowed_ips="0.0.0.0/0"
   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].route_allowed_ips='1'
-   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].persistent_keepalive='25'
+  uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].persistent_keepalive='25'
   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].endpoint_port='51820'
   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].endpoint_host=$INSTANCE_IP
-
   uci commit
- 
+
+  # let's just make sure that everything has been taken into account
+  # by restarting the network interface
+
+  ubus call network.interface.${LOCAL_WG_INTERFACE} down
+  sleep 5
+  ubus call network.interface.${LOCAL_WG_INTERFACE} up
+
+
 else
   # add the new peer to the wg0 config file
-  wg set ${LOCAL_WG_INTERFACE} peer $SERVER_PUB_KEY allowed-ips "0.0.0.0/0"
-  wg-quick down ${LOCAL_WG_INTERFACE} && wg-quick up ${LOCAL_WG_INTERFACE}
+  wg set ${LOCAL_WG_INTERFACE} peer $SERVER_PUB_KEY endpoint $INSTANCE_IP:51820 allowed-ips "0.0.0.0/0"
+
+  # restart the Wireguard interface
+  wg-quick down ${LOCAL_WG_INTERFACE}
+  wg-quick up ${LOCAL_WG_INTERFACE}
 fi
