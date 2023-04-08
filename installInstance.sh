@@ -3,6 +3,9 @@
 # This script runs the remote script
 # on the newly created instance and
 # installs Wireguard on it
+# You will need the software packages 
+# curl, sshpass, jq and wireguard installed!
+# on OpenWrt you also need openssh-client
 # ##################################
 
 # include the parameters from the previous createInstance.sh run
@@ -38,6 +41,21 @@ else
 fi
 
 # ##################################
+# Now ssh into the new server for a
+# first time and accept the host 
+# key. Wait until the 
+# instance is ready
+# ##################################
+
+SSHRESULT=""
+while [ ! "SSHRESULT" = "OK" ] ; do
+  if (sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no root@${INSTANCE_IP} echo "Hello") ; then
+    SSHRESULT=OK
+  fi
+  sleep 5
+done
+
+# ##################################
 # Now ssh into the new server and
 # Create a Wireguard Server on it
 # It may take a while until the 
@@ -48,13 +66,13 @@ fi
 # if not, then we instruct the server to pull the script from
 # Marc's Github Repo
 if [ -e remotescript.sh ] ; then
-  sshpass -p "${SSH_PASS}" scp -o StrictHostKeyChecking=no remotescript.sh root@${INSTANCE_IP}:/root/remotescript.sh
+  sshpass -p "${SSH_PASS}" scp remotescript.sh root@${INSTANCE_IP}:/root/remotescript.sh
 else
-  sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no root@${INSTANCE_IP} "wget https://raw.githubusercontent.com/onemarcfifty/api_vpn/master/remotescript.sh"
+  sshpass -p "${SSH_PASS}" ssh root@${INSTANCE_IP} "wget https://raw.githubusercontent.com/onemarcfifty/api_vpn/master/remotescript.sh"
 fi
 
 # now we just execute it on the remote host
-sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no root@${INSTANCE_IP} "bash remotescript.sh $LOCAL_PUBLIC_KEY"
+sshpass -p "${SSH_PASS}" ssh root@${INSTANCE_IP} "bash remotescript.sh $LOCAL_PUBLIC_KEY"
 
 # the script has set the (remote) Environment variable SERVER_PUBLIC_KEY
 # which contains the Wireguard public key of the remote instance

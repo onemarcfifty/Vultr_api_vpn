@@ -22,5 +22,5 @@ if [ -n $INSTANCE_ID ]; then
   echo $API_RESPONSE
 fi
 
-empty the file
+# empty the file
 echo "" >.instance

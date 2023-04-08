@@ -3,6 +3,8 @@
 # ##################################
 # create a Wireguard Server instance
 # on demand using the vultr api
+# You will need the software packages 
+# curl, sshpass, jq and wireguard installed!
 # ##################################
 
 # the first parameter is the region 
@@ -75,7 +77,7 @@ INSTANCE_IP=$(echo "$API_RESPONSE" | jq -r '.instance.main_ip')
 # let's save the most important information into the .instance file
 (cat >.instance) <<EOF
 INSTANCE_ID=$INSTANCE_ID
-SSH_PASS="$SSH_PASS"
+SSH_PASS='$SSH_PASS'
 INSTANCE_IP=$INSTANCE_IP
 EOF
 chmod 0600 .instance
