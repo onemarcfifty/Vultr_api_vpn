@@ -48,7 +48,7 @@ fi
 # ##################################
 
 SSHRESULT=""
-while [ ! "SSHRESULT" = "OK" ] ; do
+while [ "$SSHRESULT" != "OK" ] ; do
   if (sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no root@${INSTANCE_IP} echo "Hello") ; then
     SSHRESULT=OK
   fi
@@ -95,7 +95,9 @@ if [ "$OPENWRT" = "TRUE" ] ; then
   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].description="REMOTE"
   uci add_list network.@wireguard_${LOCAL_WG_INTERFACE}[-1].allowed_ips="0.0.0.0/0"
   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].route_allowed_ips='1'
-	uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].persistent_keepalive='25'
+   uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].persistent_keepalive='25'
+  uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].endpoint_port='51820'
+  uci set network.@wireguard_${LOCAL_WG_INTERFACE}[-1].endpoint_host=$INSTANCE_IP
 
   uci commit
  
