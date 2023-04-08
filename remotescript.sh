@@ -42,4 +42,5 @@ wg set wg0 peer $REMOTE_PUBLIC_KEY allowed-ips "$WGCLIENTADDRESS,192.168.0.0/24,
 
 # we need to down and up the interface in order to 
 # make changes persistent
-wg-quick down wg0 && wg-quick up wg0
+wg-quick down wg0
+wg-quick up wg0
