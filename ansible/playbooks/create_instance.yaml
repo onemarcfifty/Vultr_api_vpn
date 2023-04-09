@@ -1,0 +1,29 @@
+---
+- name: Create Vultr Instance
+  hosts: rundeck
+  become: false
+  gather_facts: false
+
+  tasks:
+
+  - name: Create an instance using Debian
+    vultr.cloud.instance:
+      api_key: "{{ vultr_api_key }}"
+      label: "{{ vultr_host_label }}"
+      hostname: "{{ vultr_host_name }}"
+      user_data: |
+        #cloud-config
+        packages:
+          - nginx
+      plan: "{{ vultr_plan }}"
+      ddos_protection: false
+      backups: false
+      enable_ipv6: true
+      ssh_keys:
+        - ansible_key
+      tags:
+        - vpn
+        - project-ansible
+      region: "{{ vultr_region }}"
+      os: Debian 11 x64 (bullseye)
+      state: present

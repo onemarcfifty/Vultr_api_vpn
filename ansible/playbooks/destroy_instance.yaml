@@ -1,0 +1,13 @@
+---
+- name: Destroy Vultr Instance
+  hosts: rundeck
+  become: false
+  gather_facts: false
+
+  tasks:
+  - name: Delete an instance
+    vultr.cloud.instance:
+      api_key: "{{ vultr_api_key }}"
+      label: "{{ vultr_host_label }}"
+      region: "{{ vultr_region }}"
+      state: absent

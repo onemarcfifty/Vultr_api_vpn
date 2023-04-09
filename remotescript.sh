@@ -38,6 +38,8 @@ export SERVER_PUBLIC_KEY=$(wg | grep "public key" | cut -d " " -f 5)
 echo $SERVER_PUBLIC_KEY >.serverkey
 
 # add the new peer to the wg0 config file
+# We will allow 192.x and 10.x RFC1819 addresses by default as 
+# well as the address of the peer
 wg set wg0 peer $REMOTE_PUBLIC_KEY allowed-ips "$WGCLIENTADDRESS,192.168.0.0/24,10.0.0.0/8"
 
 # we need to down and up the interface in order to 

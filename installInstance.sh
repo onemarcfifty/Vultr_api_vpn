@@ -36,6 +36,11 @@ else
     LOCAL_PRIVATE_KEY=$(uci show network.${LOCAL_WG_INTERFACE}.private_key | cut -d \' -f 2)
   else
     LOCAL_PRIVATE_KEY=`wg genkey`
+    # @@@@ TODO: if we generate a private key on the fly, then
+    # we would also need to add it to our local Wireguard as the 
+    # private key of the Server!
+    # we might in fact in this case install Wireguard from scratch in 
+    # case it does not exist locally.
   fi
   LOCAL_PUBLIC_KEY=$(echo "$LOCAL_PRIVATE_KEY" | wg pubkey)
 fi

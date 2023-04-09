@@ -1,0 +1,7 @@
+plugin: vultr.cloud.vultr
+api_key: 1234YOUR5678APIKEYHERE
+groups:
+  vultr: true
+  cloud: true
+compose:
+  ansible_host: vultr_main_ip
