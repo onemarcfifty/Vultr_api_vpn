@@ -29,3 +29,5 @@ If you don't need it anymore, just run `destroyInstance.sh` and the Server will 
 ## using ansible with VULTR
 
 in the `ansible` subdfolder you can find some playbook examples on how to create or destroy instances with the Vultr API. They are not used here but I include them in the repo for your reference. There is also an example inventory file.
+
+The reason why I did not use Ansible for the deployment is that the scripts should also run e.g. on an OpenWrt router. Installing ansible there would add a lot of overhead.
